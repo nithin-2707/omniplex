@@ -5,6 +5,12 @@ type Props = {
   params: { id: string };
 };
 
+// Required for static export
+export async function generateStaticParams() {
+  // Return empty array since we can't pre-generate chat IDs
+  return [];
+}
+
 export async function generateMetadata({ params }: Props) {
   const ogImageUrl = `https://omniplex.ai/api/og?id=${params.id}`;
 
