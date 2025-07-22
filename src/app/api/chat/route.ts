@@ -1,15 +1,16 @@
+﻿import { NextRequest } from "next/server";
+
 // Chat API simplified for static export - returns placeholder data
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   return new Response(
     JSON.stringify({
-      message: "Chat disabled in demo mode - This is a Stripe integration demo. Please check out our Stripe payment integration below!",
-      choices: [{ 
-        delta: { content: "Chat functionality is disabled in this Stripe integration demo. Please scroll down to try our payment system!" } 
-      }]
+      message: "Chat disabled in demo mode - This is a Stripe integration demo",
+      response: "This is a demo response. The chat feature is disabled for static deployment.",
+      demo: true
     }),
     { 
       status: 200,
-      headers: { 'Content-Type': 'application/json' }
+      headers: { "Content-Type": "application/json" }
     }
   );
 }

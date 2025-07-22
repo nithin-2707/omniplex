@@ -1,4 +1,4 @@
-// Scrape API simplified for static export - returns placeholder data
+﻿// Scrape API simplified for static export - returns placeholder data
 export async function POST(req: Request) {
   return new Response(
     JSON.stringify({

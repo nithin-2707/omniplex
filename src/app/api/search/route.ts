@@ -1,14 +1,14 @@
-// Search API simplified for static export - returns placeholder data
+﻿// Search API simplified for static export
 export async function POST(req: Request) {
   return new Response(
-    JSON.stringify({
-      message: "Search disabled in demo mode - This is a Stripe integration demo", 
-      sources: [],
-      results: []
-    }),
+    JSON.stringify({ 
+      message: "Search disabled in demo", 
+      sources: [], 
+      results: [] 
+    }), 
     { 
-      status: 200,
-      headers: { "Content-Type": "application/json" }
+      status: 200, 
+      headers: { "Content-Type": "application/json" } 
     }
   );
 }

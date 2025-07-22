@@ -1,4 +1,4 @@
-// Favicon API simplified for static export - returns placeholder
+﻿// Favicon API simplified for static export - returns placeholder
 export async function GET(req: Request) {
   // Return a simple 1x1 transparent PNG as placeholder
   const transparentPng = Buffer.from(

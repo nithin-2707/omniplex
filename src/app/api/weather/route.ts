@@ -1,14 +1,14 @@
-// Weather API simplified for static export - returns placeholder data  
+﻿// Weather API simplified for static export
 export async function GET(req: Request) {
   return new Response(
-    JSON.stringify({
-      message: "Weather disabled in demo mode - This is a Stripe integration demo",
-      current: null,
-      forecast: []
-    }),
+    JSON.stringify({ 
+      message: "Weather disabled in demo", 
+      current: null, 
+      forecast: [] 
+    }), 
     { 
-      status: 200,
-      headers: { "Content-Type": "application/json" }
+      status: 200, 
+      headers: { "Content-Type": "application/json" } 
     }
   );
 }
