@@ -15,14 +15,6 @@ const nextConfig = {
   compiler: {
     removeConsole: process.env.NODE_ENV === "production",
   },
-  // Skip dynamic routes during export since they're not needed for Stripe demo
-  exportPathMap: async function () {
-    return {
-      '/': { page: '/' },
-      '/success': { page: '/success' },
-      '/cancel': { page: '/cancel' },
-    };
-  },
 };
 
 export default nextConfig;

@@ -1,58 +1,7 @@
-import Chat from "@/components/Chat/Chat";
-import AuthWrapper from "../../AuthWrapper";
+import { redirect } from 'next/navigation';
 
-type Props = {
-  params: { id: string };
-};
-
-// Required for static export
-export async function generateStaticParams() {
-  // Return empty array since we can't pre-generate chat IDs
-  return [];
+// Redirect all dynamic chat routes to home for static export
+// This route is not needed for the Stripe integration demo
+export default function ChatPage() {
+  redirect('/');
 }
-
-export async function generateMetadata({ params }: Props) {
-  const ogImageUrl = `https://omniplex.ai/api/og?id=${params.id}`;
-
-  return {
-    title: "Omniplex",
-    description: "Search online with the power of AI. Try now!",
-    openGraph: {
-      title: "Omniplex - Web Search AI",
-      description: "Search online with the power of AI. Try now!",
-      images: [
-        {
-          url: ogImageUrl,
-          width: 1200,
-          height: 630,
-          alt: "Omniplex - Web Search AI",
-        },
-      ],
-      url: `https://omniplex.ai/chat/${params.id}`,
-      type: "website",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: "Omniplex - Web Search AI",
-      description: "Search online with the power of AI. Try now!",
-      images: [
-        {
-          url: ogImageUrl,
-          width: 1200,
-          height: 630,
-          alt: "Omniplex - Web Search AI",
-        },
-      ],
-    },
-  };
-}
-
-const ChatPage = ({ params }: Props) => {
-  return (
-    <AuthWrapper>
-      <Chat id={params.id} />
-    </AuthWrapper>
-  );
-};
-
-export default ChatPage;
