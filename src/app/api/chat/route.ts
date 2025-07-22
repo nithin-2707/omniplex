@@ -1,34 +1,15 @@
-import OpenAI from "openai";
-import { OpenAIStream, StreamingTextResponse } from "ai";
-
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
-export const runtime = "edge";
-
+// Chat API simplified for static export - returns placeholder data
 export async function POST(req: Request) {
-  const {
-    messages,
-    model,
-    temperature,
-    max_tokens,
-    top_p,
-    frequency_penalty,
-    presence_penalty,
-  } = await req.json();
-
-  const response = await openai.chat.completions.create({
-    stream: true,
-    model: model,
-    temperature: temperature,
-    max_tokens: max_tokens,
-    top_p: top_p,
-    frequency_penalty: frequency_penalty,
-    presence_penalty: presence_penalty,
-    messages: messages,
-  });
-
-  const stream = OpenAIStream(response);
-  return new StreamingTextResponse(stream);
+  return new Response(
+    JSON.stringify({
+      message: "Chat disabled in demo mode - This is a Stripe integration demo. Please check out our Stripe payment integration below!",
+      choices: [{ 
+        delta: { content: "Chat functionality is disabled in this Stripe integration demo. Please scroll down to try our payment system!" } 
+      }]
+    }),
+    { 
+      status: 200,
+      headers: { 'Content-Type': 'application/json' }
+    }
+  );
 }
