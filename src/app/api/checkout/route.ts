@@ -1,13 +1,25 @@
 ﻿import { NextRequest } from "next/server";
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2025-06-30.basil",
-});
-
 // Stripe Checkout API for Pro Plan purchase
 export async function POST(req: NextRequest) {
   try {
+    // Check if Stripe secret key is available
+    if (!process.env.STRIPE_SECRET_KEY) {
+      console.error("STRIPE_SECRET_KEY not found in environment variables");
+      return new Response(
+        JSON.stringify({ error: "Stripe configuration missing" }),
+        { 
+          status: 500,
+          headers: { "Content-Type": "application/json" }
+        }
+      );
+    }
+
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+      apiVersion: "2025-06-30.basil",
+    });
+
     const body = await req.json();
     
     // Create Stripe checkout session
@@ -44,7 +56,10 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error("Stripe checkout error:", error);
     return new Response(
-      JSON.stringify({ error: "Failed to create checkout session" }),
+      JSON.stringify({ 
+        error: "Failed to create checkout session",
+        details: error instanceof Error ? error.message : "Unknown error"
+      }),
       { 
         status: 500,
         headers: { "Content-Type": "application/json" }
