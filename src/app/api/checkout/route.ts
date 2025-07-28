@@ -36,7 +36,7 @@ export async function POST(request: Request) {
             product_data: {
               name: 'Omniplex Pro Plan',
               description: 'Unlimited AI conversations, advanced features, priority support',
-              images: ['https://delightful-forest-03b64411e.4.azurestaticapps.net/Logo.png'],
+              images: ['https://yellow-glacier-0ede4af10.2.azurestaticapps.net/Logo.png'],
             },
             unit_amount: amount, // $10.00 in cents
           },
@@ -45,10 +45,10 @@ export async function POST(request: Request) {
       ],
       mode: 'payment',
       success_url: `${process.env.NODE_ENV === 'production' 
-        ? 'https://delightful-forest-03b64411e.4.azurestaticapps.net' 
+        ? 'https://yellow-glacier-0ede4af10.2.azurestaticapps.net' 
         : 'http://localhost:3000'}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.NODE_ENV === 'production' 
-        ? 'https://delightful-forest-03b64411e.4.azurestaticapps.net' 
+        ? 'https://yellow-glacier-0ede4af10.2.azurestaticapps.net' 
         : 'http://localhost:3000'}/cancel`,
       billing_address_collection: 'auto',
       customer_creation: 'always',
