@@ -116,3 +116,81 @@
   justify-content: flex-end;
   align-items: center;
 }
+
+/* Professional Pro Plan Styles */
+.proSection {
+  width: 100%;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+  border: 1px solid #3a3a3a;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 20px 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.proHeader {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.proTitle {
+  font-size: 20px;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 4px;
+}
+
+.proSubtitle {
+  font-size: 14px;
+  color: #a0a0a0;
+}
+
+.proFeatures {
+  margin: 16px 0;
+}
+
+.proFeature {
+  font-size: 14px;
+  color: #e0e0e0;
+  margin-bottom: 8px;
+  padding-left: 4px;
+}
+
+.proPricing {
+  text-align: center;
+  margin: 20px 0 16px 0;
+}
+
+.proPrice {
+  font-size: 32px;
+  font-weight: 700;
+  color: #4ade80;
+}
+
+.proPeriod {
+  font-size: 14px;
+  color: #a0a0a0;
+  margin-left: 8px;
+}
+
+.stripeContainer {
+  width: 100%;
+}
+
+.stripeContainer button {
+  width: 100% !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  padding: 12px !important;
+  border-radius: 8px !important;
+  background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%) !important;
+  border: none !important;
+  color: white !important;
+  cursor: pointer !important;
+  transition: all 0.25s ease-in-out !important;
+}
+
+.stripeContainer button:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 20px rgba(74, 222, 128, 0.3) !important;
+}

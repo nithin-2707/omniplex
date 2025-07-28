@@ -2,84 +2,73 @@
 import Stripe from "stripe";
 
 // Stripe Checkout API for Pro Plan purchase
-export async function POST(req: NextRequest) {
+export async function POST(request: Request) {
   try {
-    // Check if Stripe secret key is available
+    const body = await request.json();
+    const { amount } = body;
+
+    console.log('Checkout request received:', { amount });
+
+    // Use Stripe secret key
     const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
-    
-    if (!stripeSecretKey) {
-      console.error("STRIPE_SECRET_KEY not found in environment variables");
-      console.log("Available env vars:", Object.keys(process.env).filter(key => key.includes('STRIPE')));
-      
-      // Fallback to demo mode if env var is missing
-      const demoSessionId = `cs_demo_${Date.now()}`;
-      const origin = req.headers.get("origin") || "https://yellow-glacier-0ede4af10.2.azurestaticapps.net";
-      
-      return new Response(
-        JSON.stringify({
-          sessionId: demoSessionId,
-          url: `${origin}/success?session_id=${demoSessionId}&demo=true`
-        }),
-        { 
-          status: 200,
-          headers: { "Content-Type": "application/json" }
-        }
+
+    if (!stripeSecretKey || stripeSecretKey.includes('dummy') || stripeSecretKey.includes('demo')) {
+      console.error('Stripe secret key not properly configured');
+      return Response.json(
+        { error: 'Stripe configuration not found. Please contact support.' },
+        { status: 500 }
       );
     }
 
-    // Initialize Stripe with the secret key
-    const stripe = new Stripe(stripeSecretKey);
+    console.log('Stripe key found, creating session...');
 
-    const body = await req.json();
-    const origin = req.headers.get("origin") || "https://yellow-glacier-0ede4af10.2.azurestaticapps.net";
-    
-    // Create Stripe checkout session
+    const stripe = new Stripe(stripeSecretKey, {
+      apiVersion: '2025-06-30.basil',
+    });
+
+    // Create Checkout Sessions from body params
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card"],
+      payment_method_types: ['card'],
       line_items: [
         {
           price_data: {
-            currency: "usd",
+            currency: 'usd',
             product_data: {
-              name: "Omniplex Pro Plan",
-              description: "Unlock unlimited AI conversations and advanced features",
+              name: 'Omniplex Pro Plan',
+              description: 'Unlimited AI conversations, advanced features, priority support',
+              images: ['https://delightful-forest-03b64411e.4.azurestaticapps.net/Logo.png'],
             },
-            unit_amount: 1000, // $10.00 in cents
+            unit_amount: amount, // $10.00 in cents
           },
           quantity: 1,
         },
       ],
-      mode: "payment",
-      success_url: `${origin}/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${origin}/cancel`,
+      mode: 'payment',
+      success_url: `${process.env.NODE_ENV === 'production' 
+        ? 'https://delightful-forest-03b64411e.4.azurestaticapps.net' 
+        : 'http://localhost:3000'}/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.NODE_ENV === 'production' 
+        ? 'https://delightful-forest-03b64411e.4.azurestaticapps.net' 
+        : 'http://localhost:3000'}/cancel`,
+      billing_address_collection: 'auto',
+      customer_creation: 'always',
     });
 
-    return new Response(
-      JSON.stringify({
-        sessionId: session.id,
-        url: session.url
-      }),
-      { 
-        status: 200,
-        headers: { "Content-Type": "application/json" }
-      }
-    );
+    console.log('Stripe session created successfully:', session.id);
+
+    return Response.json({
+      sessionId: session.id,
+      url: session.url
+    });
+
   } catch (error) {
-    console.error("Stripe checkout error:", error);
-    
-    // Fallback to demo mode on any error
-    const demoSessionId = `cs_demo_${Date.now()}`;
-    const origin = req.headers.get("origin") || "https://yellow-glacier-0ede4af10.2.azurestaticapps.net";
-    
-    return new Response(
-      JSON.stringify({
-        sessionId: demoSessionId,
-        url: `${origin}/success?session_id=${demoSessionId}&demo=true&fallback=true`
-      }),
+    console.error('Stripe API error:', error);
+    return Response.json(
       { 
-        status: 200,
-        headers: { "Content-Type": "application/json" }
-      }
+        error: 'Failed to create checkout session. Please try again.',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
+      { status: 500 }
     );
   }
 }

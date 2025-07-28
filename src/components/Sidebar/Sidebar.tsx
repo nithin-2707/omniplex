@@ -8,6 +8,7 @@ import Library from "../Library/Library";
 import Plugins from "../Plugins/Plugins";
 import Profile from "../Profile/Profile";
 import Settings from "../Settings/Settings";
+import Upgrade from "../Upgrade/Upgrade";
 import Auth from "../Auth/Auth";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
@@ -25,6 +26,8 @@ import Setting from "../../../public/svgs/sidebar/Setting_Active.svg";
 import SettingInactive from "../../../public/svgs/sidebar/Setting_Inactive.svg";
 import Plugin from "../../../public/svgs/sidebar/Plugin_Active.svg";
 import PluginInactive from "../../../public/svgs/sidebar/Plugin_Inactive.svg";
+import UpgradeActive from "../../../public/svgs/sidebar/Upgrade_Active.svg";
+import UpgradeInactive from "../../../public/svgs/sidebar/Upgrade_Inactive.svg";
 import User from "../../../public/svgs/sidebar/User.svg";
 import Collapse from "../../../public/svgs/sidebar/Collapse.svg";
 
@@ -194,6 +197,20 @@ const Sidebar = () => {
                       onClick={() => setSelected("plugins")}
                     />
                   )}
+                  {selected === "upgrade" ? (
+                    <Image
+                      src={UpgradeActive}
+                      alt="Upgrade"
+                      className={styles.iconActive}
+                    />
+                  ) : (
+                    <Image
+                      src={UpgradeInactive}
+                      alt="Upgrade"
+                      className={styles.icon}
+                      onClick={() => setSelected("upgrade")}
+                    />
+                  )}
                 </div>
                 <div>
                   <Image
@@ -223,6 +240,8 @@ const Sidebar = () => {
                 <Settings />
               ) : selected === "plugins" ? (
                 <Plugins />
+              ) : selected === "upgrade" ? (
+                <Upgrade close={closeSidebar} />
               ) : (
                 <Profile close={closeSidebar} />
               )}

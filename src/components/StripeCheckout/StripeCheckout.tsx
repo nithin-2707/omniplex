@@ -17,7 +17,8 @@ const StripeCheckout = () => {
       const stripe = await stripePromise;
       
       if (!stripe) {
-        alert('Stripe failed to load');
+        alert('Stripe failed to load. Please refresh and try again.');
+        setIsLoading(false);
         return;
       }
 
@@ -32,10 +33,25 @@ const StripeCheckout = () => {
         })
       });
 
-      const { sessionId } = await response.json();
+      if (!response.ok) {
+        const errorData = await response.json();
+        alert(errorData.error || 'Failed to create checkout session');
+        setIsLoading(false);
+        return;
+      }
+
+      const data = await response.json();
+      const { sessionId, error } = data;
+
+      if (error) {
+        alert(error);
+        setIsLoading(false);
+        return;
+      }
 
       if (!sessionId) {
-        alert('Failed to create checkout session');
+        alert('No session ID received. Please try again.');
+        setIsLoading(false);
         return;
       }
 
@@ -46,83 +62,87 @@ const StripeCheckout = () => {
 
       if (result.error) {
         alert(result.error.message);
+        setIsLoading(false);
       }
       
     } catch (error) {
       console.error('Checkout error:', error);
-      alert('Something went wrong with the payment');
-    } finally {
+      alert('An unexpected error occurred. Please try again.');
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="bg-black rounded-2xl p-8 max-w-md mx-auto border-2 border-white">
-      {/* Icon */}
-      <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-6">
-        <svg className="w-8 h-8 text-black" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M12 2L13.09 8.26L22 9L13.09 9.74L12 16L10.91 9.74L2 9L10.91 8.26L12 2Z"/>
-        </svg>
-      </div>
-
-      {/* Title */}
-      <h3 className="text-2xl font-bold text-white text-center mb-2">
-        Omniplex Pro Plan
-      </h3>
-
-      {/* Description */}
-      <p className="text-white text-center mb-6">
-        Unlock unlimited AI conversations and advanced features
-      </p>
-
-      {/* Price */}
-      <div className="text-center mb-6">
-        <span className="text-4xl font-bold text-white">$10.00</span>
-        <span className="text-white ml-2">/month</span>
-      </div>
-
-      {/* Features */}
-      <div className="space-y-3 mb-8">
-        <div className="flex items-center text-white">
-          <svg className="w-5 h-5 text-white mr-3" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
-          </svg>
-          Unlimited AI conversations
-        </div>
-        <div className="flex items-center text-white">
-          <svg className="w-5 h-5 text-white mr-3" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
-          </svg>
-          Advanced search capabilities
-        </div>
-        <div className="flex items-center text-white">
-          <svg className="w-5 h-5 text-white mr-3" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
-          </svg>
-          Priority support
-        </div>
-      </div>
-
+    <div style={{ width: '100%' }}>
       {/* Subscribe Button */}
       <button
         onClick={handleCheckout}
         disabled={isLoading}
-        className="w-full bg-white text-black font-semibold py-3 px-6 rounded-xl hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        style={{
+          width: '100%',
+          padding: '12px 24px',
+          fontSize: '16px',
+          fontWeight: '600',
+          borderRadius: '8px',
+          border: 'none',
+          background: isLoading 
+            ? '#6b7280' 
+            : 'linear-gradient(135deg, #4ade80 0%, #22c55e 100%)',
+          color: 'white',
+          cursor: isLoading ? 'not-allowed' : 'pointer',
+          transition: 'all 0.25s ease-in-out',
+          boxShadow: isLoading 
+            ? 'none' 
+            : '0 2px 8px rgba(74, 222, 128, 0.2)',
+        }}
+        onMouseEnter={(e) => {
+          if (!isLoading) {
+            e.currentTarget.style.transform = 'translateY(-1px)';
+            e.currentTarget.style.boxShadow = '0 6px 20px rgba(74, 222, 128, 0.3)';
+          }
+        }}
+        onMouseLeave={(e) => {
+          if (!isLoading) {
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.boxShadow = '0 2px 8px rgba(74, 222, 128, 0.2)';
+          }
+        }}
       >
-        {isLoading ? 'Processing...' : 'Subscribe Now'}
+        {isLoading ? 'Processing...' : '🚀 Upgrade to Pro - $10'}
       </button>
 
       {/* Test Card Info */}
-      <div className="mt-4 text-center">
-        <p className="text-xs text-gray-500">
-          💳 Test with card: 4242 4242 4242 4242
-        </p>
-        <p className="text-xs text-gray-600 mt-1">
-          Secure payment powered by Stripe
-        </p>
+      <div style={{ marginTop: '12px', textAlign: 'center' }}>
+        <div style={{ 
+          fontSize: '12px', 
+          color: '#ffffff', 
+          margin: '4px 0',
+          fontFamily: 'monospace',
+          backgroundColor: '#1a1a1a',
+          padding: '8px 12px',
+          borderRadius: '6px',
+          border: '1px solid #4ade80'
+        }}>
+          💳 Test Card: <strong>4242 4242 4242 4242</strong>
+        </div>
+        <div style={{ 
+          fontSize: '10px', 
+          color: '#a0a0a0', 
+          margin: '4px 0'
+        }}>
+          Use any future expiry date and any 3-digit CVC
+        </div>
+        <div style={{ 
+          fontSize: '10px', 
+          color: '#cccccc', 
+          margin: '4px 0'
+        }}>
+          🔒 Secure payment by Stripe
+        </div>
       </div>
     </div>
   );
 };
 
 export default StripeCheckout;
+

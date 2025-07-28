@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { ScrollShadow } from "@nextui-org/scroll-shadow";
 import { useDisclosure } from "@nextui-org/modal";
 import Delete from "../Delete/Delete";
+import StripeCheckout from "../StripeCheckout/StripeCheckout";
 import { getAuth, signOut } from "firebase/auth";
 import { useDispatch, useSelector } from "react-redux";
 import { resetAISettings } from "@/store/aiSlice";
@@ -22,6 +23,7 @@ const Plugins = (props: Props) => {
   const dispatch = useDispatch();
   const userDetails = useSelector(selectUserDetailsState);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [isPro, setIsPro] = useState(false); // You can connect this to your user subscription state
 
   const handleLogout = async () => {
     const auth = getAuth();
@@ -65,8 +67,37 @@ const Plugins = (props: Props) => {
               <div className={styles.profileText}>{userDetails.name}</div>
               <div className={styles.profileHeader}>Email</div>
               <div className={styles.profileText}>{userDetails.email}</div>
+              <div className={styles.profileHeader}>Plan</div>
+              <div className={styles.profileText}>
+                {isPro ? "Pro Plan" : "Free Plan"}
+              </div>
             </div>
           </div>
+          
+          {/* Professional Stripe Pro Plan Section */}
+          {!isPro && (
+            <div className={styles.proSection}>
+              <div className={styles.proHeader}>
+                <div className={styles.proTitle}>🚀 Upgrade to Pro</div>
+                <div className={styles.proSubtitle}>Unlock unlimited features</div>
+              </div>
+              <div className={styles.proFeatures}>
+                <div className={styles.proFeature}>✓ Unlimited chat conversations</div>
+                <div className={styles.proFeature}>✓ Advanced AI models access</div>
+                <div className={styles.proFeature}>✓ Priority support</div>
+                <div className={styles.proFeature}>✓ Export chat history</div>
+                <div className={styles.proFeature}>✓ Custom plugins</div>
+              </div>
+              <div className={styles.proPricing}>
+                <span className={styles.proPrice}>$10</span>
+                <span className={styles.proPeriod}>one-time</span>
+              </div>
+              <div className={styles.stripeContainer}>
+                <StripeCheckout />
+              </div>
+            </div>
+          )}
+          
           <div className={styles.bottomContainer}>
             <div onClick={handleLogout} className={styles.button}>
               Log Out
