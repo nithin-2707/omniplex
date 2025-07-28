@@ -22,7 +22,7 @@ const StripeCheckout = () => {
         return;
       }
 
-      // Create checkout session
+      // Create checkout session using Azure Function
       const response = await fetch('/api/checkout', {
         method: 'POST',
         headers: {

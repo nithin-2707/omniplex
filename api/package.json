@@ -1,0 +1,14 @@
+{
+  "name": "omniplex-api",
+  "version": "1.0.0",
+  "description": "Azure Functions API for Omniplex",
+  "scripts": {
+    "start": "func start",
+    "test": "echo \"No tests yet...\""
+  },
+  "dependencies": {
+    "@azure/functions": "^4.0.0",
+    "stripe": "^18.3.0"
+  },
+  "devDependencies": {}
+}
